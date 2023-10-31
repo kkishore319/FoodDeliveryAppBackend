@@ -1,0 +1,35 @@
+package com.fds.externalServices;
+
+import java.util.List;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.fds.externalClass.Order;
+
+@FeignClient(name="order-service",url = "http://localhost:9994/order")
+public interface OrderProxy {
+	
+	@PostMapping("/order/{itemId}")
+	ResponseEntity<String> makeAOrder(@RequestBody Order o,@PathVariable String itemId) ;
+
+	@DeleteMapping("/cancel/{id}")
+	ResponseEntity<String> cancelOrder(@PathVariable int id) ;
+
+	@PutMapping("/update/{id}")
+	ResponseEntity<Order> updateAnOrder(@PathVariable int id, @RequestBody Order o);
+	@GetMapping("/view/{id}")
+	Order viewAnOrder(@PathVariable int id) ;
+	
+	@GetMapping("/viewByName/{orderName}")
+	List<Order> viewByOrderName(@PathVariable String orderName);
+
+	@GetMapping("/viewAll")
+	List<Order> viewAllOrder();
+}

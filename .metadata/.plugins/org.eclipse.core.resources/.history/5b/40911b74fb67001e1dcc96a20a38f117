@@ -1,0 +1,72 @@
+package com.fds.restaurant.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.fds.restaurant.exception.ItemException;
+import com.fds.restaurant.exception.RestaurantNotFoundException;
+import com.fds.restaurant.model.Item;
+import com.fds.restaurant.model.Restaurant;
+import com.fds.restaurant.repository.ItemRepository;
+import com.fds.restaurant.repository.RestaurantRepo;
+
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
+@Service
+public class ItemServiceImpl implements ItemService{
+	
+	@Autowired
+	ItemRepository itemRepository;
+	
+	@Autowired
+	RestaurantRepo restaurantRepo;
+
+	@Override
+	public Item addItem(Item item) {
+		log.info("addItem method in item service");
+		// TODO Auto-generated method stub
+		List<Restaurant> restList=restaurantRepo.findAll();
+		for(Restaurant r:restList) {
+			if(r.getRestaurantId()==item.getRestaurantId()) {
+				return itemRepository.save(item);
+			}else {
+				throw new ItemException("The restaurant with "+item.getRestaurantId()+" id is not there");
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public List<Item> viewAllItems() {
+		// TODO Auto-generated method stub
+		log.info("viewAllItems method in item service");
+		List<Item> findAll=itemRepository.findAll();
+		if(!findAll.isEmpty()) {
+			return findAll;
+		}else {
+			throw new ItemException("No Items found");
+		}
+	}
+
+	@Override
+	public List<Item> viewItemByName(String itemName) {
+		// TODO Auto-generated method stub
+		log.info("viewItemByName method in item service");
+		List<Item> items=itemRepository.findByItemName(itemName);
+		if(items.isEmpty()) {
+			throw new ItemException("There are no items with that name");
+		}else {
+			return items;
+		}
+	}
+
+	@Override
+	public String deleteItemById(String id) {
+		// TODO Auto-generated method stub
+		log.info("deleteItemById method in item service");
+		return null;
+	}
+
+}

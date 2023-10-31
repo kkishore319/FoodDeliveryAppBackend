@@ -1,0 +1,5 @@
+package com.fds.externalServices;
+
+public interface PaymentProxy {
+
+}

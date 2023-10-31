@@ -1,0 +1,5 @@
+package com.fds.order.external;
+
+public interface PaymentProxy {
+
+}

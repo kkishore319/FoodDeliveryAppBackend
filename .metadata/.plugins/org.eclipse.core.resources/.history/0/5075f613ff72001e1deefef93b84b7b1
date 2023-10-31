@@ -1,0 +1,55 @@
+package com.fds;
+
+import com.fds.exception.UserNotFoundException;
+import com.fds.model.Login;
+import com.fds.repo.LoginRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+
+public class LoginServiceImplTest {
+
+    @InjectMocks
+    private ServiceImpl service;
+
+    @Mock
+    private LoginRepository loginRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @BeforeEach
+    public void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void testGetAllUsers() {
+        List<Login> userList = new ArrayList<>();
+        Login user1 = new Login("user1", "password1", "User", 1234567890, "user1@example.com", "Country");
+        Login user2 = new Login("user2", "password2", "Admin", 9876543210, "user2@example.com", "Country");
+        userList.add(user1);
+        userList.add(user2);
+
+        Mockito.when(loginRepository.findAll()).thenReturn(userList);
+
+        List<Login> result = service.getAllUsers();
+
+        assertEquals(1, result.size());
+        assertEquals("User", result.get(0).getRole());
+    }
+
+    @Test
+

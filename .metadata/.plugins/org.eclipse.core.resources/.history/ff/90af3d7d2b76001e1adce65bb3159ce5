@@ -1,0 +1,56 @@
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
+import java.util.Date;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.fds.payment.model.Payment;
+import com.fds.payment.repository.PaymentRepository;
+
+@SpringBootTest
+public class PaymentRepositoryTest {
+
+    @InjectMocks
+    private PaymentRepository paymentRepository;
+
+    @Mock
+    private PaymentRepository mockPaymentRepository;
+
+    @BeforeEach
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void testFindByOrderId() {
+        // Create a sample Payment object
+        Payment payment = new Payment();
+        payment.setOrderId(1);
+        payment.setTransactionId(101L);
+        payment.setPaymentDate(new Date());
+        payment.setUsername("testuser");
+        payment.setAmount(100.0);
+        payment.setTransactionStatus("Success");
+
+        // Mock the behavior of the repository
+        when(mockPaymentRepository.findByOrderId("1")).thenReturn(payment);
+
+        // Perform the actual test
+        Payment result = paymentRepository.findByOrderId("1");
+
+        // Verify that the result matches the expected value
+        assertEquals(1, result.getOrderId());
+        assertEquals(101L, result.getTransactionId());
+        assertEquals("testuser", result.getUsername());
+
+        // Verify that the repository method was called with the correct parameter
+        verify(mockPaymentRepository, times(1)).findByOrderId("1");
+    }
+}

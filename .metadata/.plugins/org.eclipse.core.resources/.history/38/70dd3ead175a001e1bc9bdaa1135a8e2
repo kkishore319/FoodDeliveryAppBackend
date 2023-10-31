@@ -1,0 +1,14 @@
+package com.eg.repo;
+
+import java.util.List;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+import com.eg.model.Rating;
+
+public interface RatingRepo extends MongoRepository<Rating, String>{
+	
+	public List<Rating> findByHotelId(String hotelId);
+	
+	
+}

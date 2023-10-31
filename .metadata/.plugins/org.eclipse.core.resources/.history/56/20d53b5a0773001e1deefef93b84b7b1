@@ -1,0 +1,75 @@
+package com.fds;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fds.controller.AuthController;
+import com.fds.jwt.JwtUtility;
+import com.fds.request.LoginRequest;
+
+@SpringBootTest
+public class LoginControllerTest {
+
+    @Autowired
+    private AuthController authController;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @MockBean
+    private AuthenticationManager authenticationManager;
+
+    @MockBean
+    private UserDetailsService userDetailsService;
+
+    @MockBean
+    private JwtUtility jwtUtility;
+
+    @Test
+    public void testValidateUser() throws Exception {
+        // Mocking the authentication manager
+        Authentication authentication = new UsernamePasswordAuthenticationToken("testUser", "testPassword");
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
+
+        // Mocking the user details service
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("USER_ROLE"));
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User("testUser", bCryptPasswordEncoder.encode("testPassword"), authorities);
+        when(userDetailsService.loadUserByUsername("testUser")).thenReturn(userDetails);
+
+        // Mocking the JWT utility
+        when(jwtUtility.generateToken(any(Authentication.class))).thenReturn("mockedJWTToken");
+
+        LoginRequest loginRequest = new LoginRequest("testUser", "testPassword");
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/registration/signin")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(loginRequest)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.token").value("mockedJWTToken"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("testUser"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0]").value("USER_ROLE"));
+    }
+}

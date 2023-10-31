@@ -1,0 +1,36 @@
+package com.eg.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.eg.Repo.HotelRepo;
+import com.eg.model.Hotel;
+
+public class HotelImpl implements HotelService{
+	
+	@Autowired
+	HotelRepo hp;
+
+	@Override
+	public Hotel create(Hotel h) {
+		// TODO Auto-generated method stub
+		return hp.save(h);
+	}
+
+	@Override
+	public List<Hotel> getAll() {
+		// TODO Auto-generated method stub
+		return hp.findAll();
+	}
+
+	@Override
+	public Hotel get(String id) {
+		// TODO Auto-generated method stub
+		return hp.findById(id).get();
+	}
+	
+	ho
+
+
+}

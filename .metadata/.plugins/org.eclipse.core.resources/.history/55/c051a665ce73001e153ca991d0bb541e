@@ -1,0 +1,65 @@
+package com.fds.payment;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.fds.payment.exception.PaymentException;
+import com.fds.payment.external.OrderProxy;
+import com.fds.payment.model.Payment;
+import com.fds.payment.repository.PaymentRepository;
+import com.fds.payment.service.PaymentServiceImpl;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@SpringBootTest
+public class PaymentServiceImplTest {
+
+    @InjectMocks
+    private PaymentServiceImpl paymentService;
+
+    @Mock
+    private PaymentRepository paymentRepository;
+
+    @Mock
+    private OrderProxy orderProxy;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void testDoPayment() {
+        Payment payment = new Payment(1, "Order123", "User123", 100.0, "Payment Successfull");
+        when(paymentRepository.save(any())).thenReturn(payment);
+
+        Payment result = paymentService.doPayment("User123", "Order123", 100.0);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTransactionId());
+        assertEquals("Payment Successfull", result.getTransactionStatus());
+    }
+
+    @Test
+    public void testDoPaymentFailure() {
+        when(paymentRepository.save(any())).thenThrow(new PaymentException("Payment Failed of RS 100.0"));
+
+        assertThrows(PaymentException.class, () -> paymentService.doPayment("User123", "Order123", 100.0));
+    }
+
+    @Test
+    public void testGetPayment() {
+        Payment payment = new Payment(1, "Order123", "User123", 100.0, "Payment Successfull");
+        when(paymentRepository.findByOrderId("Order123")).thenReturn(payment);
+
+        Payment result = paymentService.getPayment("Order123");
+
+        assertNotNull(result);
+       
+    }}

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move package &apos;com.fds.restaurant.external&apos; to &apos;order-service/src/main/java&apos;&#x0D;&#x0A;- Original project: &apos;restaurant-service&apos;&#x0D;&#x0A;- Destination element: &apos;order-service/src/main/java&apos;&#x0D;&#x0A;- Original element: &apos;restaurant-service/src/main/java/com.fds.restaurant.external&apos;&#x0D;&#x0A;- Update references to refactored element" description="Move package" destination="=order-service/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/" element1="/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.fds.restaurant.external" flags="589830" fragments="1" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.movePackages" stamp="1697008630259" version="1.0"/>
+</session>

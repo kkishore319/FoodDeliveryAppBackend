@@ -1,0 +1,13 @@
+package com.eg.Repo;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+import com.eg.model.Hotel;
+
+@Repository
+public interface HotelRepo extends MongoRepository<Hotel, String>{
+	
+	
+
+}

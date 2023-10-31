@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename package &apos;com.fds&apos; to &apos;com.fds.order&apos;&#x0D;&#x0A;- Original project: &apos;order-service&apos;&#x0D;&#x0A;- Original element: &apos;order-service/src/test/java/com.fds&apos;&#x0D;&#x0A;- Renamed element: &apos;order-service/src/test/java/com.fds.order&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename package &apos;com.fds&apos;" flags="589830" hierarchical="false" id="org.eclipse.jdt.ui.rename.package" input="/src\/test\/java=/optional=/true=/=/maven.pomderived=/true=/=/test=/true=/&lt;com.fds" name="com.fds.order" qualified="false" references="true" stamp="1698211879987" textual="false" version="1.0"/>
+</session>

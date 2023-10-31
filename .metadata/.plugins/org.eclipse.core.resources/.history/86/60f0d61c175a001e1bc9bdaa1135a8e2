@@ -1,0 +1,5 @@
+package com.eg.repo;
+
+public class RatingRepo {
+
+}

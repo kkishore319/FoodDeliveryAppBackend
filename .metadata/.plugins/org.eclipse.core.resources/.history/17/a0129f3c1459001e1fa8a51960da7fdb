@@ -1,0 +1,9 @@
+import com.eg.model.Hotel;
+
+public interface hotelService {
+	
+	create Hotel(Hotel h);
+	
+	
+
+}

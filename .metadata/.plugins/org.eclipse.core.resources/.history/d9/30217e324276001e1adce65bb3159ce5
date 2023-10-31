@@ -1,0 +1,32 @@
+package com.fds.externalServices;
+
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.fds.externalClass.Order;
+import com.fds.externalClass.Payment;
+
+
+public interface PaymentProxy {
+	@PostMapping("/doPayment")
+	public Payment doPayment(@RequestBody Order o);
+	
+	@GetMapping("/getByTransactionId/{orderId}")
+	public ResponseEntity<Payment> getPayment(@PathVariable int orderId) ;
+	
+	//@CrossOrigin(origins = "http://localhost:4200",methods = {RequestMethod.PUT,RequestMethod.GET,RequestMethod.DELETE,RequestMethod.POST})
+	@GetMapping("/getAllPayment")
+	public List<Payment> getAllPayments();
+	
+	@PutMapping("/updatePaymentFailed/{id}")
+	public ResponseEntity<Void> updatePayment(@PathVariable int id,@RequestBody Order o) ;
+	
+	@PutMapping("/updatePaymentSuccess/{id}")
+	public ResponseEntity<Void> updatePaymentToSuccess(@PathVariable int id);
+}

@@ -1,0 +1,11 @@
+package com.eg.Repo;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+import com.eg.model.Hotel;
+
+public interface HotelRepo extends MongoRepository<Hotel, String>{
+	
+	
+
+}

@@ -1,0 +1,65 @@
+package com.fds;
+
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fds.controller.AuthController;
+import com.fds.jwt.JwtUtility;
+import com.fds.request.LoginRequest;
+import com.fds.response.JSONResponse;
+import com.fds.service.UserDetailsImpl;
+
+public class LoginControllerTest {
+
+    @InjectMocks
+    private AuthController authController;
+
+    @Mock
+    private DaoAuthenticationProvider authenticationManager;
+
+    @Mock
+    private JwtUtility jwtUtility;
+
+    @Autowired
+    private UserDetails userDetails;
+
+    @Test
+    public void testValidateUser() throws Exception {
+        // Mock request data
+        LoginRequest loginRequest = new LoginRequest("testUser", "testPassword");
+
+        // Mock UserDetails
+        UserDetailsImpl userDetails = new UserDetailsImpl("testUser", "testPassword", List.of("ROLE_USER"));
+
+        // Mock Authentication
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null);
+
+        // Mock JWT token
+        when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())))
+                .thenReturn(authentication);
+        when(jwtUtility.generateToken(authentication)).thenReturn("mocked-jwt-token");
+
+        // Perform the request
+        ResponseEntity<?> responseEntity = authController.validateUser(loginRequest);
+
+        // Verify the response
+        JSONResponse jsonResponse = (JSONResponse) responseEntity.getBody();
+        assert jsonResponse != null;
+        assert responseEntity.getStatusCode().is2xxSuccessful();
+        assert jsonResponse.getJwtToken().equals("mocked-jwt-token");
+        assert jsonResponse.getUsername().equals("testUser");
+        assert jsonResponse.getRoles().contains("ROLE_USER");
+    }
+}
+

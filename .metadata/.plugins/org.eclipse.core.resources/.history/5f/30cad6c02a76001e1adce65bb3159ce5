@@ -1,0 +1,16 @@
+package com.fds.order.external;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+@FeignClient(name = "payment-service", url="http://localhost:9995/payment")
+public interface PaymentProxy {
+	
+	@GetMapping("/viewRestaurantById/{restaurantId}")
+	public Restaurant getRestaurantById(@PathVariable String restaurantId);
+	
+	
+
+	
+}

@@ -1,0 +1,72 @@
+package com.fds.payment.service;
+
+import java.util.List;
+import java.util.Random;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.fds.payment.exception.PaymentException;
+import com.fds.payment.external.Order;
+import com.fds.payment.external.OrderProxy;
+import com.fds.payment.model.Payment;
+import com.fds.payment.repository.PaymentRepository;
+
+
+
+@Service
+public class PaymentServiceImpl implements PaymentService {
+	
+	@Autowired
+	PaymentRepository paymentRepository;
+	
+	@Autowired
+	OrderProxy orderProxy;
+	
+	
+	@Override
+	public Payment doPayment(Order o) {
+      try {
+          Payment payment = new Payment();
+          Random random = new Random();
+          
+          // Generate a random number between 100 and 1000 (inclusive)
+          int randomNumber = random.nextInt(901) + 100;
+          System.out.println(randomNumber);
+          String tractionId = "" + randomNumber;
+          int id = Integer.parseInt(tractionId);
+          payment.setTransactionId(id);
+          payment.setUsername(o.getUsername());
+          payment.setAmount(o.getCost());
+          payment.setTransactionStatus(o.getOrderStatus());
+          payment.setOrderId(orderId);
+          return paymentRepository.save(payment);
+
+      } catch (Exception e) {
+          // TODO: handle exception
+
+          throw new PaymentException("Payment Failed of RS " + amount);
+
+      }
+	}
+
+	@Override
+	public Payment getPayment(String orderId) {
+		 Payment optionalPayment = paymentRepository.findByOrderId(orderId);
+
+	        if (optionalPayment!=null) {
+
+	            return optionalPayment;
+
+	        } else {
+	            throw new PaymentException("Payment not found with transactionId " + orderId);
+	        }
+	}
+
+	@Override
+	public List<Payment> getallpayment() {
+		List<Payment> p=paymentRepository.findAll();
+    	return p;
+	}
+
+}

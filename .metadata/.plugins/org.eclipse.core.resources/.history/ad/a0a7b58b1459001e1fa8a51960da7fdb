@@ -1,0 +1,16 @@
+package com.eg.service;
+import java.util.List;
+
+import com.eg.model.Hotel;
+
+public interface hotelService {
+	
+	 Hotel create(Hotel h);
+	 
+	 List<Hotel> getAll();
+	 
+	 Hotel get(String id);
+	
+	
+
+}
